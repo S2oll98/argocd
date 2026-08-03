@@ -10,8 +10,7 @@ spec:
   source:
     repoURL: https://github.com/S2oll98/argocd.git
     targetRevision: main
-    path: appsets
-    directory: { recurse: false }
+    path: appsets   # recurse 는 기본이 false — 명시하면 API 가 지워 OutOfSync 가 됨
   destination:
     server: https://kubernetes.default.svc   # 허브 로컬 — ApplicationSet 은 ArgoCD ns 리소스
     namespace: devops-argocd
