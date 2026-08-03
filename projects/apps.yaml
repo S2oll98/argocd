@@ -11,6 +11,9 @@ spec:
     # ns 는 app- prefix 로 좁혀 kube-system·devops-*·infra-* 등 플랫폼 ns 로의 오배포를 차단함
     # 클러스터는 name glob — 어느 클러스터에 무엇이 가는지는 envs 디렉터리 트리와 MR 이 통제함
     - { namespace: 'app-*', name: 'hecto-*-eks' }
-  clusterResourceWhitelist: []
+  # appset 이 CreateNamespace=true 를 씀 — Namespace 는 클러스터 범위라 여기서 허용해야 함
+  # 그 외 클러스터 범위 리소스(ClusterRole·CRD 등)는 계속 금지
+  clusterResourceWhitelist:
+    - { group: '', kind: 'Namespace' }
   namespaceResourceWhitelist:
     - { group: '*', kind: '*' }
