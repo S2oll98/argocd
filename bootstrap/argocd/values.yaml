@@ -7,6 +7,9 @@
 configs:
   cm:
     application.resourceTrackingMethod: annotation+label
+    # 이 파일을 적용하는 kustomization.yaml 이 helmCharts 를 씀 — 없으면 self-manage 앱이 렌더링 실패
+    # tofu 시드(tf-modules/argocd/main.tf)에도 동일하게 있어야 함
+    kustomize.buildOptions: --enable-helm
   params:
     server.insecure: "true"
 
