@@ -1,0 +1,131 @@
+# ──────────────────────────────────────────────────────────────────────────
+# 공통 .gitignore 표준 — 전 repo 동일본(프로젝트 성향 무관). GitLab 업로드 안전 기준.
+# 원칙: 도구가 받아오거나 생성하는 산출물은 커밋하지 않는다(소스·lock·desired state 만 커밋).
+# 새 프로젝트는 이 파일을 그대로 복사한다 — 프로젝트마다 고민할 필요 없음.
+# ──────────────────────────────────────────────────────────────────────────
+
+# OS / 에디터 ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+*.iml
+.vscode/
+
+# 비밀·자격증명 (실수 커밋 방지) ─────────────────────────────────
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*_rsa
+*_ed25519
+credentials
+.aws/
+
+# 로그 ───────────────────────────────────────────────────────────
+*.log
+
+# Python / FastAPI ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+.tox/
+dist/
+build/
+
+# Node.js / Next.js / 웹 ─────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.eslintcache
+coverage/
+.cache/
+.turbo/
+.next/
+out/
+.nuxt/
+.svelte-kit/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Go ─────────────────────────────────────────────────────────────
+*.exe
+*.exe~
+*.test
+
+# Rust ───────────────────────────────────────────────────────────
+# target/ 은 cargo(Rust) 빌드 디렉터리 — Maven(Java) 빌드 디렉터리와 동일명(공용).
+target/
+*.rs.bk
+
+# Java / JVM (Maven · Gradle · Spring) ───────────────────────────
+# gradle-wrapper.jar·*.jar 는 커밋해야 하므로 무시하지 않는다.
+*.class
+.gradle/
+hs_err_pid*
+replay_pid*
+
+# OpenTofu / Terraform / Terragrunt — state·plan·provider 캐시 금지(lock 은 커밋) ─
+.terraform/
+.terragrunt-cache/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tofout
+*.tfvars
+*.auto.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+!.terraform.lock.hcl
+
+# Helm / kustomize 차트 캐시 (검증 시 생성) ──────────────────────
+**/charts/*/charts/
+**/Chart.lock
+bootstrap/argocd/charts/
+
+# Ansible ────────────────────────────────────────────────────────
+*.retry
+.vault_pass
+.vault_pass.*
+
+# ML 산출물 + 데이터/ML 서비스 (모델·실험은 레지스트리/S3 가 SoT) ──
+artifacts/
+mlruns/
+mlartifacts/
+mlflow.db
+*.joblib
+.ipynb_checkpoints/
+# 컬럼형 데이터는 lake/S3/웨어하우스가 SoT — 커밋 금지(샘플 parquet 는 생성기로 재생성)
+*.parquet
+# Airflow (로컬 실행 산출물)
+airflow.db
+airflow.cfg
+airflow-webserver.pid
+standalone_admin_password.txt
+logs/
+# Feast (로컬 레지스트리·온라인 스토어)
+online_store.db
+registry.db
+# BentoML (빌드 번들)
+*.bento
+
+# 컨테이너 빌드 산출물 (CI 생성 — Kaniko tarball·SBOM·digest) ─────
+*.tar
+*.sbom.cdx.json
+*.digest

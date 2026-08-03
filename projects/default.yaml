@@ -1,0 +1,12 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: default
+  namespace: devops-argocd
+spec:
+  description: "사용 금지 — 모든 신규 Application은 도메인 project 사용"
+  sourceRepos: []
+  destinations: []
+  clusterResourceWhitelist: []
+  namespaceResourceBlacklist:
+    - { group: '*', kind: '*' }

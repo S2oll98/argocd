@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: bootstrap
+  namespace: devops-argocd
+spec:
+  # App-of-Apps 시드 전용. default 가 잠겨 있어 root-app 과 그 자식이 여기 소속
+  # ArgoCD 자신·AppProject·ApplicationSet 은 허브 로컬 리소스 — 여기만 in-cluster 유지
+  description: "부트스트랩 app-of-apps 계층 전용 (projects·appsets·argocd self-manage). 허브 로컬."
+  sourceRepos:
+    - https://github.com/S2oll98/argocd.git
+    - https://argoproj.github.io/argo-helm   # argocd self-manage (kustomize helmCharts)
+  destinations:
+    - { namespace: devops-argocd, server: https://kubernetes.default.svc }
+  clusterResourceWhitelist:
+    - { group: '*', kind: '*' }
+  namespaceResourceWhitelist:
+    - { group: '*', kind: '*' }

@@ -1,0 +1,57 @@
+# 일관된 코드 스타일 — 에디터 무관, 전 repo 동일본. https://editorconfig.org
+# 들여쓰기 기본은 space. 언어별 규칙은 각 공식 포매터(gofmt·black·rustfmt·prettier…)와 정합.
+# (예외: Makefile·Go — 문법/포매터가 탭을 강제하므로 space 시 깨진다.)
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Python / FastAPI (PEP8 · black) ─────────────────────────────────
+[*.py]
+indent_size = 4
+
+# Go (gofmt — 탭 강제) ────────────────────────────────────────────
+[*.go]
+indent_style = tab
+tab_width = 4
+
+# Rust (rustfmt) ──────────────────────────────────────────────────
+[*.rs]
+indent_size = 4
+
+# Java / Kotlin / Gradle / Groovy (Java · Spring) ─────────────────
+[*.{java,kt,kts,gradle,groovy}]
+indent_size = 4
+
+# Web (Node · Next.js · TS — prettier 기본 2) ─────────────────────
+[*.{js,jsx,mjs,cjs,ts,tsx,vue,svelte,css,scss,less,html,json,jsonc}]
+indent_size = 2
+
+# IaC / 설정 ──────────────────────────────────────────────────────
+[*.{tf,tofu,hcl}]
+indent_size = 2
+
+[*.{yml,yaml}]
+indent_size = 2
+
+# Makefile (탭 강제) ──────────────────────────────────────────────
+[{Makefile,*.mk}]
+indent_style = tab
+
+# Windows 스크립트 (CRLF 유지 — .gitattributes 와 정합) ────────────
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+
+# Markdown (줄 끝 2-space 줄바꿈 보존) ────────────────────────────
+[*.md]
+trim_trailing_whitespace = false
+
+# Jupyter 노트북 (Jupyter 가 관리하는 JSON — 텍스트 정규화 비적용) ──
+[*.ipynb]
+trim_trailing_whitespace = false
+insert_final_newline = false

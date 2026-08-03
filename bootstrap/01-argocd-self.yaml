@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bootstrap-argocd
+  namespace: devops-argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"   # ArgoCD self-manage 최선행 (tofu helm → git 이양)
+spec:
+  project: bootstrap
+  source:
+    repoURL: https://github.com/S2oll98/argocd.git
+    targetRevision: main
+    path: bootstrap/argocd
+    # bootstrap/argocd 는 kustomize(helmCharts) — Application 이 kustomize 앱으로 인식
+  destination:
+    # 허브 로컬 — ArgoCD 본체는 infra-platform 클러스터 안에만 있음. name 기반 전환 대상 아님
+    server: https://kubernetes.default.svc
+    namespace: devops-argocd
+  syncPolicy:
+    automated: { prune: false, selfHeal: true }   # ArgoCD 본체 — prune 금지(안전)
+    syncOptions: [ServerSideApply=true]

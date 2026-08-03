@@ -1,0 +1,109 @@
+# 줄바꿈·diff·언어통계 규약 — 전 repo 동일본. https://git-scm.com/docs/gitattributes
+# 기본: 텍스트는 LF 정규화(.editorconfig 와 정합), 바이너리는 정규화 금지.
+* text=auto eol=lf
+
+# 명시적 텍스트(코드·설정) ───────────────────────────────────────
+*.py     text
+*.go     text
+*.rs     text
+*.java   text
+*.kt     text
+*.kts    text
+*.js     text
+*.jsx    text
+*.ts     text
+*.tsx    text
+*.mjs    text
+*.cjs    text
+*.vue    text
+*.svelte text
+*.css    text
+*.scss   text
+*.html   text
+*.sql    text
+*.proto  text
+*.sh     text
+*.tf     text
+*.tofu   text
+*.hcl    text
+*.yaml   text
+*.yml    text
+*.json   text
+*.toml   text
+*.md     text
+*.gradle text
+
+# Windows 스크립트는 CRLF 유지 / Gradle wrapper 양분 ──────────────
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+gradlew     text eol=lf
+gradlew.bat text eol=crlf
+
+# 생성물·lock — diff 억제 + 언어 통계 제외(linguist) ──────────────
+# *.lock 은 poetry/uv/yarn/Cargo/Pipfile.lock 을 모두 포함.
+*.lock              linguist-generated
+.terraform.lock.hcl text linguist-generated
+package-lock.json   linguist-generated
+pnpm-lock.yaml      linguist-generated
+go.sum              linguist-generated
+*.min.js            linguist-generated
+*.min.css           linguist-generated
+*.map               linguist-generated
+*_pb2.py            linguist-generated
+*_pb2_grpc.py       linguist-generated
+*.pb.go             linguist-generated
+
+# 바이너리(정규화 금지) — 이미지·미디어 ──────────────────────────
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.avif binary
+*.pdf  binary
+*.mp4  binary
+*.webm binary
+*.mov  binary
+*.mp3  binary
+*.wav  binary
+# 폰트
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
+# 아카이브
+*.gz  binary
+*.tgz binary
+*.tar binary
+*.zip binary
+*.bz2 binary
+*.xz  binary
+*.7z  binary
+# 컴파일·패키지 산출물
+*.whl   binary
+*.jar   binary
+*.war   binary
+*.ear   binary
+*.class binary
+*.exe   binary
+*.dll   binary
+*.so    binary
+*.dylib binary
+# ML 모델·데이터 아티팩트
+*.joblib      binary
+*.pkl         binary
+*.onnx        binary
+*.pt          binary
+*.pth         binary
+*.h5          binary
+*.pb          binary
+*.bin         binary
+*.safetensors binary
+*.parquet     binary
+*.npy         binary
+*.npz         binary
+*.feather     binary
+*.arrow       binary
+*.tfrecord    binary

@@ -1,0 +1,49 @@
+# ArgoCD 전체 설정의 SoT. tofu argocd 모듈은 시드 최소값만 갖고 여기로 수렴함
+# chart 버전 핀은 kustomization.yaml
+#
+# global.domain 미설정 — ingress 없이 port-forward 접속. LBC·ACM·DNS 생긴 뒤 추가
+# redis-ha 미사용 — 부트스트랩 노드 1~2대에 redis 3 + haproxy 3 은 과함
+
+configs:
+  cm:
+    application.resourceTrackingMethod: annotation+label
+  params:
+    server.insecure: "true"
+
+controller:
+  replicas: 1
+  resources:
+    requests: { cpu: 100m, memory: 640Mi }
+    limits: { cpu: 500m, memory: 1Gi }
+
+server:
+  service:
+    type: ClusterIP
+  resources:
+    requests: { cpu: 25m, memory: 128Mi }
+    limits: { cpu: 200m, memory: 256Mi }
+
+# 최초 sync 때 전 앱이 동시에 helm pull → 메모리 burst. 256Mi·512Mi 둘 다 OOMKilled 실측 → 1Gi
+repoServer:
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { cpu: 500m, memory: 1Gi }
+
+applicationSet:
+  resources:
+    requests: { cpu: 25m, memory: 64Mi }
+    limits: { cpu: 100m, memory: 128Mi }
+
+notifications:
+  resources:
+    requests: { cpu: 25m, memory: 64Mi }
+    limits: { cpu: 100m, memory: 128Mi }
+
+redis:
+  resources:
+    requests: { cpu: 25m, memory: 32Mi }
+    limits: { cpu: 100m, memory: 128Mi }
+
+# OIDC 미구성 상태에서는 불필요
+dex:
+  enabled: false

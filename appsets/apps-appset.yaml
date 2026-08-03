@@ -1,0 +1,70 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+  namespace: devops-argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - { env: prod, cluster: infra-platform }
+                - { env: prod, cluster: data-platform }
+                # - { env: dev, cluster: platform-dev }   # 계정 준비 후
+          - git:
+              repoURL: https://github.com/S2oll98/argocd.git
+              revision: main
+              files:
+                - path: "envs/{{ .env }}/{{ .cluster }}/apps/*/chart.yaml"
+  template:
+    metadata:
+      name: "{{ .path.basename }}-{{ .cluster }}"
+    spec:
+      project: apps
+      sources:
+        - repoURL: https://github.com/S2oll98/argocd.git
+          targetRevision: main
+          ref: values
+        - repoURL: https://github.com/S2oll98/argocd.git
+          targetRevision: main
+          path: "{{ .path.path }}"
+          directory:
+            recurse: true
+            exclude: "{chart.yaml,values.yaml}"
+      destination:
+        name: "hecto-{{ .cluster }}-eks"
+        namespace: "{{ .namespace }}"
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions: [ServerSideApply=true, CreateNamespace=true]
+  # .chart 직접 참조 금지 — mode: manifests 앱에 그 키가 없어 missingkey=error 로 죽음
+  templatePatch: |
+    {{- if dig "chart" "" . }}
+    spec:
+      sources:
+        - repoURL: {{ .chart.repoURL }}
+          {{- if dig "chart" "chart" "" . }}
+          chart: {{ .chart.chart }}
+          {{- end }}
+          {{- if dig "chart" "path" "" . }}
+          path: {{ .chart.path }}
+          {{- end }}
+          targetRevision: {{ .chart.targetRevision | quote }}
+          helm:
+            releaseName: {{ .path.basename }}
+            ignoreMissingValueFiles: true
+            valueFiles:
+              - $values/{{ .path.path }}/values.yaml
+        - repoURL: https://github.com/S2oll98/argocd.git
+          targetRevision: main
+          ref: values
+        - repoURL: https://github.com/S2oll98/argocd.git
+          targetRevision: main
+          path: {{ .path.path }}
+          directory:
+            recurse: true
+            exclude: "{chart.yaml,values.yaml}"
+    {{- end }}

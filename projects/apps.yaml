@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: apps
+  namespace: devops-argocd
+spec:
+  description: "사내 사용자 노출 서비스."
+  sourceRepos:
+    - https://github.com/S2oll98/argocd.git
+  destinations:
+    # ns 는 app- prefix 로 좁혀 kube-system·devops-*·infra-* 등 플랫폼 ns 로의 오배포를 차단함
+    # 클러스터는 name glob — 어느 클러스터에 무엇이 가는지는 envs 디렉터리 트리와 MR 이 통제함
+    - { namespace: 'app-*', name: 'hecto-*-eks' }
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - { group: '*', kind: '*' }

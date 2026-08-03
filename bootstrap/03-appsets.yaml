@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bootstrap-appsets
+  namespace: devops-argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"   # projects 이후. appset 이 워크로드 Application 을 생성
+spec:
+  project: bootstrap
+  source:
+    repoURL: https://github.com/S2oll98/argocd.git
+    targetRevision: main
+    path: appsets
+    directory: { recurse: false }
+  destination:
+    server: https://kubernetes.default.svc   # 허브 로컬 — ApplicationSet 은 ArgoCD ns 리소스
+    namespace: devops-argocd
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [ServerSideApply=true]

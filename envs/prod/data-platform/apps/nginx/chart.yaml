@@ -1,0 +1,4 @@
+# 모드 C (raw manifests) — 허브-스포크 검증용 최소 워크로드
+# 디스크·AWS 권한을 쓰지 않음. ebs-csi·pod-identity 없이도 뜨는 것이 목적
+mode: manifests
+namespace: app-nginx
